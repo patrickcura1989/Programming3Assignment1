@@ -25,7 +25,7 @@ public class GenerateJavaFile
 
 		try
 		{
-			pw = new PrintWriter(new FileWriter(nameOfClass + ".java"));
+			pw = new PrintWriter(new FileWriter(nameOfClass + "Clone.java"));
 
 			// get the package name of the class
 			Package packageName = className.getPackage();
@@ -50,30 +50,18 @@ public class GenerateJavaFile
 			pw.println("\n{");
 
 			// gets all the public member fields of the class
-			Field[] fields = className.getFields();
+			Field[] fields = className.getDeclaredFields();
 
 			for (Field oneField : fields)
 			{
 				// get public field name
-				Field field = className.getField(oneField.getName());
-				String fieldname = field.getName();
+				String fieldname = oneField.getName();
 
 				// get public field type
-				Object fieldType = field.getType();
-				pw.println("public" + fieldType.toString().replace("class", "") + " " + fieldname + ";");
+				Object fieldType = oneField.getType();
+				pw.println(Modifier.toString(oneField.getModifiers()) + " " + fieldType.toString().replace("class ", "")
+						+ " " + fieldname + ";");
 			}
-
-			// getDeclaredField() returns the private field
-			Field privateField = SmartPhone.class.getDeclaredField("antenna");
-
-			String privateFieldName = privateField.getName();
-			// makes this private field instance accessible
-			// for reflection use only, not normal code
-			privateField.setAccessible(true);
-
-			// get private field type
-			Object privateFieldType = privateField.getType();
-			pw.println("private " + privateFieldType.toString() + " " + privateFieldName + ";");
 
 			// get declared constructors of the class
 			Constructor[] constructors = className.getDeclaredConstructors();
@@ -129,10 +117,6 @@ public class GenerateJavaFile
 
 		}
 		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		catch (NoSuchFieldException e)
 		{
 			e.printStackTrace();
 		}
