@@ -5,6 +5,7 @@ public class ReplenishSuppliesRunnable implements Runnable
 	private PizzaMakingMachine pizzaMakingMachine;
 	private String ingredient;
 	private int DELAY = 5000;
+//	private int DELAY = 0;
 
 	public ReplenishSuppliesRunnable(PizzaMakingMachine pizzaMakingMachine, String ingredient)
 	{
@@ -16,6 +17,7 @@ public class ReplenishSuppliesRunnable implements Runnable
 	{
 		try
 		{
+			// forever replenish the said ingredient
 			while(true)
 			{
 				pizzaMakingMachine.replenishIngredient(ingredient);
