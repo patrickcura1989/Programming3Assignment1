@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
@@ -24,7 +25,7 @@ public class GenerateJavaFile
 
 		try
 		{
-			pw = new PrintWriter(new FileWriter(nameOfClass + "Clone.java"));
+			pw = new PrintWriter(new FileWriter(nameOfClass + ".java"));
 
 			// get the package name of the class
 			Package packageName = className.getPackage();
@@ -76,23 +77,56 @@ public class GenerateJavaFile
 
 			// get declared constructors of the class
 			Constructor[] constructors = className.getDeclaredConstructors();
-			
-			for ( Constructor aConstructor : constructors)
+
+			for (Constructor aConstructor : constructors)
 			{
-				pw.print("public " + aConstructor.getName().replace(packageName.getName()+".", "")+ "(");
-				int counter=0;
+				pw.print("public " + aConstructor.getName().replace(packageName.getName() + ".", "") + "(");
+				int counter = 0;
 				for (Class paramType : aConstructor.getParameterTypes())
 				{
-					pw.print(paramType.getName() + " param" + counter);	
+					pw.print(paramType.getName() + " param" + counter);
 					counter++;
-					if(counter < aConstructor.getParameterTypes().length)
+					if (counter < aConstructor.getParameterTypes().length)
 					{
 						pw.print(",");
-					}					
+					}
 				}
-				pw.println("){}");			
+				pw.println("){}");
 			}
-			
+
+			// get all methods declared in the class
+			// but excludes inherited methods.
+			Method[] declaredMethods = className.getDeclaredMethods();
+
+			for (Method dmethod : declaredMethods)
+			{
+				pw.print(Modifier.toString(dmethod.getModifiers()) + " "
+						+ dmethod.getReturnType().toString().replace("class ", "") + " " + dmethod.getName() + "(");
+				int counter = 0;
+				for (Class paramType : dmethod.getParameterTypes())
+				{
+					pw.print(paramType.getName() + " param" + counter);
+					counter++;
+					if (counter < dmethod.getParameterTypes().length)
+					{
+						pw.print(",");
+					}
+				}
+				if ("void".equals(dmethod.getReturnType().toString()))
+				{
+					pw.println("){}");
+				}
+				else if (dmethod.getReturnType().equals(Integer.TYPE))
+				{
+					pw.println("){return 0;}");
+				}
+				else if (dmethod.getReturnType().equals(String.class))
+				{
+					pw.println("){return null;}");
+				}
+			}
+			pw.print("}");
+
 		}
 		catch (IOException e)
 		{
@@ -161,13 +195,11 @@ public class GenerateJavaFile
 			}
 
 			// get method with specific name and parameters
-			Method oneMethod = className.getMethod("respondToTouch", int[].class);
+			Method oneMethod = className.getMethod("respondToTouch", Long.TYPE);
 			System.out.println("Method is: " + oneMethod);
 
 			// call method
-			int[] input =
-			{ 1, 2 };
-			oneMethod.invoke(objectClass, input);
+			oneMethod.invoke(objectClass, 1);
 
 			// get all the parameters of method
 			Class[] parameterTypes = oneMethod.getParameterTypes();
