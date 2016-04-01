@@ -1,9 +1,9 @@
 package Task1;
 
-public class SmartPhone extends Phone implements BasicFeatures
+public class SmartPhone extends Task1.Phone implements Task1.BasicFeatures
 {
-	private int antenna[];
-	public String mic;
+	public java.lang.String mic;
+	private float antenna;
 	
 	public SmartPhone(String welcomeMessage)
 	{

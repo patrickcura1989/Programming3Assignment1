@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 public class GenerateJavaFile
@@ -15,21 +16,97 @@ public class GenerateJavaFile
 	public static void main(String[] args)
 	{
 		PrintWriter pw = null;
-		
+
+		String nameOfClass = "SmartPhone";
+
 		// Obtain the class object if we know the name of the class
 		Class className = SmartPhone.class;
 
 		try
 		{
-			pw = new PrintWriter(new FileWriter("SmartPhoneClone.java"));
+			pw = new PrintWriter(new FileWriter(nameOfClass + "Clone.java"));
 
 			// get the package name of the class
 			Package packageName = className.getPackage();
 
-			pw.print(packageName + ";");
+			pw.println(packageName + ";\n");
+
+			pw.print("public class " + nameOfClass);
+
+			// get superclasses
+			Type superClass = className.getGenericSuperclass();
+
+			pw.print(superClass.toString().replace("class ", " extends "));
+
+			// get interfaces
+			Type[] allInterfaces = className.getGenericInterfaces();
+
+			for (Type anInterface : allInterfaces)
+			{
+				pw.print(anInterface.toString().replace("interface", " implements"));
+			}
+
+			pw.println("\n{");
+
+			// gets all the public member fields of the class
+			Field[] fields = className.getFields();
+
+			for (Field oneField : fields)
+			{
+				// get public field name
+				Field field = className.getField(oneField.getName());
+				String fieldname = field.getName();
+
+				// get public field type
+				Object fieldType = field.getType();
+				pw.println("public" + fieldType.toString().replace("class", "") + " " + fieldname + ";");
+			}
+
+			// getDeclaredField() returns the private field
+			Field privateField = SmartPhone.class.getDeclaredField("antenna");
+
+			String privateFieldName = privateField.getName();
+			// makes this private field instance accessible
+			// for reflection use only, not normal code
+			privateField.setAccessible(true);
+
+			// get private field type
+			Object privateFieldType = privateField.getType();
+			pw.println("private " + privateFieldType.toString() + " " + privateFieldName + ";");
+
+			// get declared constructors of the class
+			Constructor[] constructors = className.getDeclaredConstructors();
+			
+			for ( Constructor aConstructor : constructors)
+			{
+				pw.print("public " + aConstructor.getName().replace(packageName.getName()+".", "")+ "(");
+				int counter=0;
+				for (Class paramType : aConstructor.getParameterTypes())
+				{
+					pw.print(paramType.getName() + " param" + counter);	
+					counter++;
+					if(counter < aConstructor.getParameterTypes().length)
+					{
+						pw.print(",");
+					}					
+				}
+				pw.println("){}");			
+			}
 			
 		}
 		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		catch (NoSuchFieldException e)
+		{
+			e.printStackTrace();
+		}
+		catch (SecurityException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e)
 		{
 			e.printStackTrace();
 		}
@@ -40,8 +117,6 @@ public class GenerateJavaFile
 				pw.close();
 			}
 		}
-
-
 
 		try
 		{
@@ -135,7 +210,7 @@ public class GenerateJavaFile
 			privateField.setAccessible(true);
 
 			// get the value of this private field
-			String fieldValue = (String) privateField.get(objectClass);
+			String fieldValue = "" + privateField.get(objectClass);
 			System.out.println("fieldValue = " + fieldValue);
 
 		}
