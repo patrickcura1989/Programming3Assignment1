@@ -18,6 +18,7 @@ public class GenerateJavaFile
 	{
 		PrintWriter pw = null;
 
+		// name of class to generate a copy of
 		String nameOfClass = "SmartPhone";
 
 		// Obtain the class object if we know the name of the class
@@ -25,7 +26,8 @@ public class GenerateJavaFile
 
 		try
 		{
-			pw = new PrintWriter(new FileWriter(nameOfClass + "Clone.java"));
+			// print the output with word Copy at the end
+			pw = new PrintWriter(new FileWriter(nameOfClass + "Copy.java"));
 
 			// get the package name of the class
 			Package packageName = className.getPackage();
@@ -59,6 +61,7 @@ public class GenerateJavaFile
 
 				// get public field type
 				Object fieldType = oneField.getType();
+				
 				pw.println(Modifier.toString(oneField.getModifiers()) + " " + fieldType.toString().replace("class ", "")
 						+ " " + fieldname + ";");
 			}
@@ -69,11 +72,15 @@ public class GenerateJavaFile
 			for (Constructor aConstructor : constructors)
 			{
 				pw.print("public " + aConstructor.getName().replace(packageName.getName() + ".", "") + "(");
+				
+				// parameter counter
 				int counter = 0;
 				for (Class paramType : aConstructor.getParameterTypes())
 				{
 					pw.print(paramType.getName() + " param" + counter);
+					
 					counter++;
+					// if not the last parameter add a comma
 					if (counter < aConstructor.getParameterTypes().length)
 					{
 						pw.print(",");
@@ -83,13 +90,13 @@ public class GenerateJavaFile
 			}
 
 			// get all methods declared in the class
-			// but excludes inherited methods.
 			Method[] declaredMethods = className.getDeclaredMethods();
 
 			for (Method dmethod : declaredMethods)
 			{
 				pw.print(Modifier.toString(dmethod.getModifiers()) + " "
 						+ dmethod.getReturnType().toString().replace("class ", "") + " " + dmethod.getName() + "(");
+				
 				int counter = 0;
 				for (Class paramType : dmethod.getParameterTypes())
 				{
@@ -100,6 +107,8 @@ public class GenerateJavaFile
 						pw.print(",");
 					}
 				}
+				
+				// generate method body with corresponding return type
 				if ("void".equals(dmethod.getReturnType().toString()))
 				{
 					pw.println("){}");
