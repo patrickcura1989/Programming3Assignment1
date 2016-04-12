@@ -20,7 +20,22 @@ public class ReplenishSuppliesRunnable implements Runnable
 			// forever replenish the said ingredient
 			while(true)
 			{
-				pizzaMakingMachine.replenishIngredient(ingredient);
+				if("Garlic".equals(ingredient))
+				{
+					pizzaMakingMachine.replenishGarlic(ingredient);
+				}
+				else if("Olives".equals(ingredient))
+				{
+					pizzaMakingMachine.replenishOlives(ingredient);
+				}
+				else if("Mushrooms".equals(ingredient))
+				{
+					pizzaMakingMachine.replenishMushrooms(ingredient);
+				}
+				else if("Anchovies".equals(ingredient))
+				{
+					pizzaMakingMachine.replenishAnchovies(ingredient);
+				}
 				Thread.sleep(DELAY);
 			}
 		}

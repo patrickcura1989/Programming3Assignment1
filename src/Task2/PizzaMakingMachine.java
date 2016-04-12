@@ -24,7 +24,7 @@ public class PizzaMakingMachine
 	}
 
 	// use synchronized keyword so that no other thread can update
-	public synchronized void replenishIngredient(String ingredient) throws InterruptedException
+	public synchronized void replenishGarlic(String ingredient) throws InterruptedException
 	{
 		while (ingredients.get(ingredient)[0] >= ingredients.get(ingredient)[1]) // while the ingredients current amount is greater than or equal to the stock limit, wait
 			wait();
@@ -33,6 +33,36 @@ public class PizzaMakingMachine
 		notifyAll();
 	}
 
+	// use synchronized keyword so that no other thread can update
+	public synchronized void replenishOlives(String ingredient) throws InterruptedException
+	{
+		while (ingredients.get(ingredient)[0] >= ingredients.get(ingredient)[1]) // while the ingredients current amount is greater than or equal to the stock limit, wait
+			wait();
+		ingredients.get(ingredient)[0]++; // increment the number of the ingredient
+		System.out.println(ingredient + " was replenished. Current Amount: " + ingredients.get(ingredient)[0]);
+		notifyAll();
+	}
+	
+	// use synchronized keyword so that no other thread can update
+	public synchronized void replenishMushrooms(String ingredient) throws InterruptedException
+	{
+		while (ingredients.get(ingredient)[0] >= ingredients.get(ingredient)[1]) // while the ingredients current amount is greater than or equal to the stock limit, wait
+			wait();
+		ingredients.get(ingredient)[0]++; // increment the number of the ingredient
+		System.out.println(ingredient + " was replenished. Current Amount: " + ingredients.get(ingredient)[0]);
+		notifyAll();
+	}
+	
+	// use synchronized keyword so that no other thread can update
+	public synchronized void replenishAnchovies(String ingredient) throws InterruptedException
+	{
+		while (ingredients.get(ingredient)[0] >= ingredients.get(ingredient)[1]) // while the ingredients current amount is greater than or equal to the stock limit, wait
+			wait();
+		ingredients.get(ingredient)[0]++; // increment the number of the ingredient
+		System.out.println(ingredient + " was replenished. Current Amount: " + ingredients.get(ingredient)[0]);
+		notifyAll();
+	}
+	
 	// use synchronized keyword so that the creation of another pizza will not mess up the current ingredient values
 	public synchronized void createPizza(String order) throws InterruptedException
 	{
