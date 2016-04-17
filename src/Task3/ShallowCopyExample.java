@@ -1,5 +1,9 @@
 package Task3;
 
+/* References:
+ * Eckel, B. Thinking in Enterprise Java, 3rd Edition (http://www.mindviewinc.com/Books/) 
+ */
+
 class ObjectToClone implements Cloneable
 {
 	public String[] value = {"old"};

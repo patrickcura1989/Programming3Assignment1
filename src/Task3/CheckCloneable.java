@@ -1,5 +1,9 @@
 package Task3;
 
+/* References:
+ * Eckel, B. Thinking in Enterprise Java, 3rd Edition (http://www.mindviewinc.com/Books/) 
+ */
+
 //: appendixa:CheckCloneable.java
 // Checking to see if a reference can be cloned.
 

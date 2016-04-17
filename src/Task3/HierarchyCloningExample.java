@@ -1,5 +1,10 @@
 package Task3;
 
+/* References:
+ * Eckel, B. Thinking in Enterprise Java, 3rd Edition (http://www.mindviewinc.com/Books/) 
+ */
+
+
 // This class will clone correctly
 class CloneableClassSample implements Cloneable
 {

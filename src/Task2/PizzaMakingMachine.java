@@ -96,7 +96,6 @@ public class PizzaMakingMachine
 		{
 			Map.Entry<String, int[]> pair = (Map.Entry<String, int[]>) it.next();
 			System.out.print(" " + pair.getKey() + ": " + pair.getValue()[0]);
-			//it.remove(); // avoids a ConcurrentModificationException
 		}
 
 		System.out.println("\n");
