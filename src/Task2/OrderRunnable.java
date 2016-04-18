@@ -20,7 +20,15 @@ public class OrderRunnable implements Runnable
 			// forever create the requested pizza
 			while (true)
 			{
-				pizzaMakingMachine.createPizza(order);
+				if("Mushroom".equals(order))
+				{
+					pizzaMakingMachine.createPizzaMushroom(order);
+				}
+				else if("Anchovy".equals(order))
+				{
+					pizzaMakingMachine.createPizzaAnchovy(order);
+				}
+				
 				Thread.sleep(DELAY);
 			}
 		}

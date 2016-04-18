@@ -64,7 +64,7 @@ public class PizzaMakingMachine
 	}
 	
 	// use synchronized keyword so that the creation of another pizza will not mess up the current ingredient values
-	public synchronized void createPizza(String order) throws InterruptedException
+	public synchronized void createPizzaMushroom(String order) throws InterruptedException
 	{
 		System.out.println();
 		System.out.println("----------------- " + order + " pizza was ordered. Creating it... -----------------\n");
@@ -103,4 +103,44 @@ public class PizzaMakingMachine
 		notifyAll();
 	}
 
+	// use synchronized keyword so that the creation of another pizza will not mess up the current ingredient values
+	public synchronized void createPizzaAnchovy(String order) throws InterruptedException
+	{
+		System.out.println();
+		System.out.println("----------------- " + order + " pizza was ordered. Creating it... -----------------\n");
+		
+		// while the current amount of ingredients does not meet the requirements to make the pizza, wait
+		while (ingredients.get("Garlic")[0] < pizzas.get(order)[0])
+			wait();
+
+		while (ingredients.get("Olives")[0] < pizzas.get(order)[1])
+			wait();
+
+		while (ingredients.get("Mushrooms")[0] < pizzas.get(order)[2])
+			wait();
+
+		while (ingredients.get("Anchovies")[0] < pizzas.get(order)[3])
+			wait();
+
+		// subtract the amount consumed from the current amount of the ingredients
+		ingredients.get("Garlic")[0] -= pizzas.get(order)[0];
+		ingredients.get("Olives")[0] -= pizzas.get(order)[1];
+		ingredients.get("Mushrooms")[0] -= pizzas.get(order)[2];
+		ingredients.get("Anchovies")[0] -= pizzas.get(order)[3];
+
+		System.out.println();
+		System.out.print(">>>>>>>>>>>>>>>>> " + order + " pizza was created.");
+
+		Iterator<Entry<String, int[]>> it = ingredients.entrySet().iterator();
+		while (it.hasNext())
+		{
+			Map.Entry<String, int[]> pair = (Map.Entry<String, int[]>) it.next();
+			System.out.print(" " + pair.getKey() + ": " + pair.getValue()[0]);
+		}
+
+		System.out.println("\n");
+
+		notifyAll();
+	}
+	
 }
